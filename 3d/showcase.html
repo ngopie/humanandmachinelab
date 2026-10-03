@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>3D Modeling Showcase | Interactive Home Visualization | Human + Machine</title>
+  <meta name="description" content="Explore an interactive 3D model of a real home exterior. See how materials, landscaping, and design options transform your space. This is what your 3D model can do.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://humanandmachinelab.com/3dmodel/showcase.html">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,300;1,500;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:           #111111;
+      --ink-mid:       #444444;
+      --ink-secondary: #666666;
+      --ink-muted:     #767676;
+      --ink-dim:       #999999;
+      --ink-ghost:     #cccccc;
+      --page:          #ffffff;
+      --surface:       #fafafa;
+      --rule:          #e8e8e8;
+      --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      --sans:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --pad:   clamp(1.25rem, 5vw, 2.5rem);
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--page);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem var(--pad);
+      border-bottom: 1px solid var(--rule);
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 50;
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: clamp(16px, 3vw, 20px);
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .nav-back {
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: clamp(2.5rem, 5vw, 4.5rem) var(--pad);
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 1rem;
+    }
+    .hero-hed {
+      font-family: var(--serif);
+      font-size: clamp(32px, 6vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      max-width: 680px;
+      margin-bottom: 1.2rem;
+    }
+    .hero-sub {
+      font-size: clamp(14px, 2vw, 16px);
+      color: var(--ink-mid);
+      line-height: 1.75;
+      max-width: 640px;
+    }
+
+    /* ── MODEL CONTAINER ── */
+    .model-wrapper {
+      padding: clamp(2rem, 4vw, 3rem) var(--pad);
+      background: var(--surface);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .model-instructions {
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    .model-container {
+      width: 100%;
+      background: var(--page);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .model-iframe {
+      width: 100%;
+      height: clamp(600px, 80vh, 900px);
+      border: none;
+      display: block;
+    }
+
+    /* ── INFO SECTION ── */
+    .info {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: clamp(3rem, 6vw, 5rem) var(--pad);
+    }
+
+    .info-section {
+      margin-bottom: clamp(3.5rem, 6vw, 5rem);
+    }
+    .info-section:last-child { margin-bottom: 0; }
+
+    .info-hed {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+    }
+    .info-hed em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--ink-secondary);
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .feature-title {
+      font-family: var(--serif);
+      font-size: clamp(18px, 2.5vw, 22px);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .feature-desc {
+      font-size: 13px;
+      color: var(--ink-mid);
+      line-height: 1.7;
+    }
+
+    .body-text {
+      font-size: 14px;
+      color: var(--ink-mid);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+    .body-text:last-child { margin-bottom: 0; }
+
+    .highlight-box {
+      background: var(--surface);
+      border-left: 3px solid var(--ink);
+      padding: clamp(1.5rem, 3vw, 2rem);
+      margin: 2rem 0;
+      border-radius: 2px;
+    }
+    .highlight-box p {
+      font-size: 14px;
+      color: var(--ink-mid);
+      line-height: 1.75;
+    }
+    .highlight-box strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .cta-primary,
+    .cta-secondary {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      padding: clamp(0.65rem, 1.5vw, 0.9rem) clamp(1.25rem, 3vw, 1.75rem);
+      border-radius: 2px;
+      transition: opacity 0.2s;
+    }
+    .cta-primary {
+      color: var(--page);
+      background: var(--ink);
+    }
+    .cta-primary:hover { opacity: 0.8; }
+    .cta-secondary {
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--rule);
+    }
+    .cta-secondary:hover { background: var(--page); }
+
+    /* ── FOOTER ── */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 2.5rem) var(--pad);
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--ink-muted);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-left { display: flex; flex-direction: column; gap: 0.2rem; }
+    .footer-name { font-size: 12px; color: var(--ink-muted); }
+    .footer-location { font-size: 11px; color: var(--ink-dim); }
+    .footer-cr { font-size: 11px; color: var(--ink-dim); }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/" class="nav-logo">Human + Machine</a>
+      <a href="how-it-works.html" class="nav-back">← Back to How It Works</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <p class="hero-eyebrow">Interactive Visualization</p>
+    <h1 class="hero-hed" id="hero-heading">See What's Possible</h1>
+    <p class="hero-sub">Explore this interactive 3D model of a real home exterior. Click, drag, zoom. Toggle materials and design options. This is how you'll work with your space before breaking ground.</p>
+  </section>
+
+  <!-- 3D MODEL EMBED -->
+  <div class="model-wrapper">
+    <p class="model-instructions">Click and drag to navigate. Scroll to zoom. Use the controls to explore design options.</p>
+    <div class="model-container">
+      <iframe class="model-iframe" src="https://ngopie.github.io/chateau-showcase/" title="3D Model Visualization - Interactive Home Exterior" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- INFO & CONTEXT -->
+  <div class="info">
+
+    <!-- WHAT YOU'RE SEEING -->
+    <section class="info-section">
+      <h2 class="info-hed">What You're Exploring</h2>
+      <p class="body-text">This is a 3D model of a real home's exterior — a detailed colonial with sophisticated architecture, varied materials, landscaping, and retaining walls. It's built to show what's possible with your own space.</p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-title">Architectural Detail</div>
+          <div class="feature-desc">Precise modeling of structure, proportions, windows, doors, rooflines, and all the details that define your home's character.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">Material Options</div>
+          <div class="feature-desc">Toggle between real material finishes for siding, roofing, landscaping, and hardscape. See what combinations work best.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">Accurate Rendering</div>
+          <div class="feature-desc">True-to-life lighting and material properties so you see how changes look at real scale, in real light.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">Interactive Exploration</div>
+          <div class="feature-desc">Walk through your space. Look at details close-up. Step back for a full view. You're in complete control.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">Design Iteration</div>
+          <div class="feature-desc">Swap materials, colors, and layouts instantly without rebuilding the 3D model. Test dozens of combinations in minutes.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-title">Before & After</div>
+          <div class="feature-desc">Compare design options side-by-side or toggle between them. See the exact impact of every change.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY THIS MATTERS -->
+    <section class="info-section">
+      <h2 class="info-hed">Why This <em>Changes</em> Everything</h2>
+      <div class="highlight-box">
+        <p><strong>A 2D rendering is a guess. A 3D model is a decision.</strong></p>
+      </div>
+      <p class="body-text">When you walk through a 3D model, you see proportions, lighting, and how materials work together — the things that actually matter but never show up in a blueprint or a flat rendering. You catch design problems before they become expensive mistakes.</p>
+      <p class="body-text">With a 3D model, you confidently spec materials, brief your contractor with precision, and avoid change orders that blow your timeline and budget. Your 3D model becomes the single source of truth for the entire project.</p>
+    </section>
+
+    <!-- NEXT STEPS -->
+    <section class="info-section">
+      <h2 class="info-hed">Ready to Build Your Own?</h2>
+      <p class="body-text">Whether you're planning an exterior refresh, a kitchen renovation, a bathroom redesign, or a full home transformation — a 3D model gives you clarity before you commit.</p>
+      <p class="body-text">Let's have a conversation about your space and your goals. No pitch. No pressure. Just a discussion about what's possible for you.</p>
+      <div class="cta-group">
+        <a href="how-it-works.html" class="cta-primary">Learn How It Works →</a>
+        <a href="/" class="cta-secondary">Start a Conversation</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">
+      <span class="footer-name">Human + Machine Lab</span>
+      <span class="footer-location">Austin, TX — Remote & on-site across North America</span>
+    </div>
+    <span class="footer-cr">© 2026 — All rights reserved</span>
+  </footer>
+
+</body>
+</html>

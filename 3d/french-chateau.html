@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>French Chateau Frontage — 3D Modeling Example</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --serif: "Cormorant Garamond", serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --ink: #111111;
+      --ink-mid: #444444;
+      --ink-muted: #767676;
+      --page: #ffffff;
+      --surface: #fafafa;
+      --rule: #e8e8e8;
+      --pad: clamp(1.25rem, 5vw, 2.5rem);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--sans);
+      background: var(--page);
+      color: var(--ink);
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.75rem var(--pad);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: clamp(16px, 3vw, 20px);
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--ink);
+      border-bottom: 1.5px solid transparent;
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
+    }
+    .nav-link:hover {
+      border-bottom-color: var(--ink);
+    }
+
+    /* ── HEADER ── */
+    .header {
+      padding: clamp(2rem, 6vw, 4rem) var(--pad);
+      border-bottom: 1px solid var(--rule);
+    }
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin: 0 0 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .breadcrumb a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ink);
+    }
+    .breadcrumb a:hover {
+      opacity: 0.7;
+    }
+    .header-hed {
+      font-family: var(--serif);
+      font-size: clamp(36px, 7vw, 56px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin: 0 0 1rem;
+      max-width: 800px;
+    }
+    .header-type {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      font-weight: 500;
+      margin: 0 0 1.5rem;
+    }
+    .header-desc {
+      font-size: 15px;
+      color: var(--ink-mid);
+      line-height: 1.7;
+      max-width: 680px;
+      margin: 0;
+    }
+
+    /* ── VIEWER SECTION ── */
+    .viewer-section {
+      padding: clamp(3rem, 8vw, 6rem) var(--pad);
+      background: var(--surface);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .viewer-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 500;
+      margin: 0 0 1rem;
+    }
+    .viewer-hed {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+      line-height: 1.2;
+    }
+    .viewer-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 10;
+      border-radius: 2px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+      box-shadow: 0 4px 16px rgba(17, 17, 17, 0.08);
+    }
+    .viewer-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .viewer-note {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    /* ── CONTENT SECTIONS ── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: clamp(2rem, 4vw, 3rem);
+      padding: clamp(3rem, 8vw, 6rem) var(--pad);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .content-block {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .content-block-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 500;
+      margin: 0;
+    }
+    .content-block-title {
+      font-family: var(--serif);
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin: 0;
+      line-height: 1.2;
+    }
+    .content-block-desc {
+      font-size: 13px;
+      color: var(--ink-mid);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── FEATURES GRID ── */
+    .features-section {
+      padding: clamp(3rem, 8vw, 6rem) var(--pad);
+      border-top: 1px solid var(--rule);
+    }
+    .features-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 500;
+      margin: 0 0 0.5rem;
+    }
+    .features-hed {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin: 0 0 clamp(2rem, 4vw, 3rem);
+      line-height: 1.2;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+    }
+    .feature {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 2px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .feature-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 0;
+    }
+    .feature-desc {
+      font-size: 13px;
+      color: var(--ink-mid);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: clamp(3rem, 8vw, 6rem) var(--pad);
+      background: var(--surface);
+      text-align: center;
+      border-top: 1px solid var(--rule);
+    }
+    .cta-hed {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin: 0 0 1.5rem;
+      line-height: 1.2;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-sub {
+      font-size: 14px;
+      color: var(--ink-mid);
+      line-height: 1.75;
+      margin: 0 0 clamp(2rem, 4vw, 3rem);
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .cta-primary,
+    .cta-secondary {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      padding: clamp(0.65rem, 1.5vw, 0.9rem) clamp(1.25rem, 3vw, 1.75rem);
+      border-radius: 2px;
+      transition: opacity 0.2s;
+    }
+    .cta-primary {
+      background: var(--ink);
+      color: var(--page);
+    }
+    .cta-primary:hover {
+      opacity: 0.85;
+    }
+    .cta-secondary {
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+    }
+    .cta-secondary:hover {
+      opacity: 0.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: clamp(2rem, 4vw, 3rem) var(--pad);
+      background: var(--surface);
+      border-top: 1px solid var(--rule);
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .viewer-container {
+        aspect-ratio: 4 / 5;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <a href="index.html" class="nav-logo">3D Modeling</a>
+    <a href="index.html" class="nav-link">← Back to Hub</a>
+  </nav>
+
+  <!-- HEADER -->
+  <section class="header">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> / French Chateau
+    </div>
+    <h1 class="header-hed">French Chateau Frontage</h1>
+    <p class="header-type">Exterior Visualization</p>
+    <p class="header-desc">A detailed 3D model of a classical exterior frontage. Explore material choices, landscaping options, and architectural details in a fully interactive environment. See how design decisions work together before implementing any changes.</p>
+  </section>
+
+  <!-- VIEWER SECTION -->
+  <section class="viewer-section">
+    <p class="viewer-label">Explore the Model</p>
+    <h2 class="viewer-hed">Interactive 3D Visualization</h2>
+    <div class="viewer-container">
+      <iframe src="https://ngopie.github.io/chateau-showcase/" title="French Chateau 3D Model Viewer"></iframe>
+    </div>
+    <p class="viewer-note">💡 Tip: Drag to rotate • Scroll to zoom • Click elements to inspect details</p>
+  </section>
+
+  <!-- WHAT YOU'RE LOOKING AT -->
+  <section class="content-grid" style="margin-top: 0;">
+    <div class="content-block">
+      <p class="content-block-label">About This Model</p>
+      <h3 class="content-block-title">What You'll Find Here</h3>
+      <p class="content-block-desc">This 3D model captures a complete exterior frontage with multiple material options, hardscape variations, and landscaping elements. Every detail was built from photos and measurements to ensure accuracy.</p>
+    </div>
+    <div class="content-block">
+      <p class="content-block-label">Design Process</p>
+      <h3 class="content-block-title">How It Was Built</h3>
+      <p class="content-block-desc">Our team started with high-resolution photos from multiple angles and took precise measurements to build an accurate 3D model of your space. The result: a detailed visualization ready for iteration.</p>
+    </div>
+    <div class="content-block">
+      <p class="content-block-label">Your Turn</p>
+      <h3 class="content-block-title">Ready to Iterate?</h3>
+      <p class="content-block-desc">This is where you explore. Toggle options. Test color combinations. Share feedback with our team. We refine the model based on what you learn, so you see the final result before any physical work begins.</p>
+    </div>
+  </section>
+
+  <!-- FEATURES OF THIS MODEL -->
+  <section class="features-section">
+    <p class="features-label">Model Features</p>
+    <h2 class="features-hed">What's Included</h2>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-icon">🏛️</div>
+        <h3 class="feature-title">Architectural Detail</h3>
+        <p class="feature-desc">Every molding, column, and facade element is precisely modeled for true-to-life representation.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎨</div>
+        <h3 class="feature-title">Material Options</h3>
+        <p class="feature-desc">Test different finishes, colors, and material combinations instantly without guesswork.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🌱</div>
+        <h3 class="feature-title">Landscaping Elements</h3>
+        <p class="feature-desc">See how plantings, hardscape, and outdoor features complement your exterior design.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💡</div>
+        <h3 class="feature-title">Lighting Scenarios</h3>
+        <p class="feature-desc">Explore how your design looks at different times of day with realistic lighting.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔄</div>
+        <h3 class="feature-title">Real-Time Iteration</h3>
+        <p class="feature-desc">Make changes and see results instantly — no waiting, no rendering delays.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📐</div>
+        <h3 class="feature-title">Accurate Proportions</h3>
+        <p class="feature-desc">Built from actual measurements, so you can trust the scale and spatial relationships.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY THIS MATTERS -->
+  <section class="content-grid">
+    <div class="content-block">
+      <p class="content-block-label">The Value</p>
+      <h3 class="content-block-title">Why 3D Models Work</h3>
+      <p class="content-block-desc">One avoided design mistake pays for the entire project. By seeing your space in 3D before any work begins, you avoid costly changes mid-project and move forward with confidence.</p>
+    </div>
+    <div class="content-block">
+      <p class="content-block-label">Real Decisions</p>
+      <h3 class="content-block-title">Make Better Choices</h3>
+      <p class="content-block-desc">Material selections, color palettes, and layout changes are always clearer in 3D. You'll catch issues a contractor might not spot, and you'll communicate your vision precisely.</p>
+    </div>
+    <div class="content-block">
+      <p class="content-block-label">Faster Timeline</p>
+      <h3 class="content-block-title">From Photos to Final Design</h3>
+      <p class="content-block-desc">The entire process takes just 1.5–2 weeks. You move from concept to a fully interactive 3D model in less time than a traditional design revision cycle.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2 class="cta-hed">Ready for Your Own 3D Model?</h2>
+    <p class="cta-sub">See what's possible with your home. Let's start with a conversation — no pitch, no pressure. Just honest talk about your project and timeline.</p>
+    <div class="cta-group">
+      <a href="mailto:hello@humanandmachinelab.com" class="cta-primary">Get Started →</a>
+      <a href="../index.html" class="cta-secondary">Back to Hub</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Human + Machine. All rights reserved. | <a href="https://humanandmachinelab.com" style="color: var(--ink-muted); text-decoration: underline;">humanandmachinelab.com</a></p>
+  </footer>
+
+</body>
+</html>
